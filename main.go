@@ -49,8 +49,9 @@ func main() {
 
 			resp := &discordgo.WebhookEdit{}
 			defer func() {
-				_, err := s.InteractionResponseEdit(i.Interaction, resp)
-				log.Println(err)
+				if _, err := s.InteractionResponseEdit(i.Interaction, resp); err != nil {
+					log.Println(err)
+				}
 			}()
 
 			g, err := getRadarGIF("IDR713")
@@ -65,7 +66,6 @@ func main() {
 				resp.Content = &e
 				return
 			}
-			// s.ChannelFileSend(ch, "IDR713.gif", &buf)
 			resp.Files = []*discordgo.File{
 				{
 					Name:        "IDR713.gif",
@@ -73,7 +73,6 @@ func main() {
 					Reader:      &buf,
 				},
 			}
-			log.Println("done")
 		}
 	})
 
