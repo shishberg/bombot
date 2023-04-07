@@ -20,6 +20,7 @@ const (
 	ftpAddr      = "ftp.bom.gov.au:21"
 	ftpRadarPath = "anon/gen/radar"
 	ftpBgPath    = "anon/gen/radar_transparencies"
+	numFrames    = 6
 )
 
 var (
@@ -31,7 +32,7 @@ func getRadarGIF(prefix string) (*gif.GIF, error) {
 	if err != nil {
 		return nil, err
 	}
-	radar, err := getRadarImages(prefix, 6)
+	radar, err := getRadarImages(prefix, numFrames)
 	if err != nil {
 		return nil, err
 	}
