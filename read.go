@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"image"
 	"image/color/palette"
@@ -111,6 +112,9 @@ func getBackground(prefix string) (img image.Image, err error) {
 		}
 		return nil
 	})
+	if drawImg == nil {
+		return nil, errors.New("No images found")
+	}
 
 	if f, err := os.Create(fn); err == nil {
 		defer f.Close()

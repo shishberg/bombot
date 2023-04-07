@@ -38,14 +38,30 @@ func main() {
 			Name:        "bom",
 			Description: "BOM Sydney 128km radar",
 			Type:        discordgo.ChatApplicationCommand,
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Name:        "idr",
+					Description: "Radar loop ID. Default is 713 (Sydney 128km)",
+					Type:        discordgo.ApplicationCommandOptionString,
+				},
+			},
 		},
 	}
 	session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		switch i.ApplicationCommandData().Name {
+		cmd := i.ApplicationCommandData()
+		switch cmd.Name {
 		case "bom":
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
 			})
+
+			idr := "713"
+			for _, opt := range cmd.Options {
+				if opt.Name == "idr" {
+					idr = opt.StringValue()
+				}
+			}
+			idr = "IDR" + idr
 
 			resp := &discordgo.WebhookEdit{}
 			defer func() {
@@ -54,7 +70,7 @@ func main() {
 				}
 			}()
 
-			g, err := getRadarGIF("IDR713")
+			g, err := getRadarGIF(idr)
 			if err != nil {
 				e := "error: " + err.Error()
 				resp.Content = &e
@@ -68,7 +84,7 @@ func main() {
 			}
 			resp.Files = []*discordgo.File{
 				{
-					Name:        "IDR713.gif",
+					Name:        idr + ".gif",
 					ContentType: "image/gif",
 					Reader:      &buf,
 				},
