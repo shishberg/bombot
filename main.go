@@ -1,26 +1,22 @@
 package main
 
 import (
-	"fmt"
-	"image/png"
+	"image/gif"
 	"log"
 	"os"
 )
 
 func main() {
-	getBackground("IDR713")
-	images, err := getRadarImages("IDR713", 6)
+	g, err := getRadarGIF("IDR713")
 	if err != nil {
 		log.Fatal(err)
 	}
-	for i, img := range images {
-		f, err := os.Create(fmt.Sprintf("radar%d.png", i))
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer f.Close()
-		if err := png.Encode(f, img); err != nil {
-			log.Fatal(err)
-		}
+	f, err := os.Create("IDR713.gif")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	if err := gif.EncodeAll(f, g); err != nil {
+		log.Fatal(err)
 	}
 }
